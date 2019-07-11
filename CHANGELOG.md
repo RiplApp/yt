@@ -6,6 +6,14 @@ For more information about changelogs, check
 [Keep a Changelog](http://keepachangelog.com) and
 [Vandamme](http://tech-angels.github.io/vandamme).
 
+## 0.33.0 - Unreleased
+
+* [FEATURE] Add back the option of initializing a resource by its URL.
+
+**Breaking change**
+
+If your code is using constant `Yt::URL::CHANNEL_PATTERNS` etc then it's moved to `Yt::Resource::CHANNEL_PATTERNS` etc.
+
 ## 0.32.4 - 2019-06-26
 
 * [FEATURE] Add `ownership_effective` method to access asset ownership ("effective") via the asset object.
@@ -14,10 +22,6 @@ For more information about changelogs, check
 * [FEATURE] Add `upload_reference_file` method for Reference file upload (thank you @jcohenho)
 * [FEATURE] Get one asset [by request](https://developers.google.com/youtube/partner/docs/v1/assets/get) (thank you @jcohenho)
 * [FEATURE] Add `update` method to Yt::Claim (thank you @jcohenho)
-
-**Breaking change**
-
-If your code is using constant `Yt::URL::CHANNEL_PATTERNS` etc then it's moved to `Yt::Resource::CHANNEL_PATTERNS` etc.
 
 ## 0.32.3 - 2019-03-15
 
