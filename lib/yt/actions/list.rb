@@ -120,6 +120,15 @@ module Yt
           params[:path] = path
           params[:exptected_response] = Net::HTTPOK
           params[:api_key] = Yt.configuration.api_key if Yt.configuration.api_key
+          params[:request_tracking_id] = request_tracking_id
+        end
+      end
+
+      def request_tracking_id
+        if instance_variable_defined?(:@parent)
+          @parent.request_tracking_id
+        elsif instance_variable_defined?(:@auth)
+          @auth.request_tracking_id
         end
       end
 

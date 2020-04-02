@@ -65,6 +65,7 @@ module Yt
       @body = options[:body]
       @headers = options.fetch :headers, {}
       @auth = options[:auth]
+      @request_tracking_id = options[:request_tracking_id]
     end
 
     # Sends the request and returns the response.
@@ -170,6 +171,7 @@ module Yt
     def send_http_request
       net_http_options = [uri.host, uri.port, use_ssl: true]
       ActiveSupport::Notifications.instrument 'request.yt' do |payload|
+        payload[:request_tracking_id] = @request_tracking_id
         payload[:method] = @method
         payload[:request_uri] = uri
         payload[:response] = Net::HTTP.start(*net_http_options) do |http|
