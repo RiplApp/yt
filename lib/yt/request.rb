@@ -198,9 +198,25 @@ module Yt
     # - when the user has reached the quota for requests/second, and waiting
     #   for a couple of seconds might solve the connection issues.
     def run_again?
-      refresh_token_and_retry? ||
-      server_error? && sleep_and_retry?(3) ||
-      exceeded_quota? && sleep_and_retry?(3)
+
+      retry_after_refresh_token = refresh_token_and_retry?
+      retry_due_to_server_error = server_error?
+      retry_due_to_rate_limit = exceeded_rate_limit_quota?
+
+      if retry_after_refresh_token || retry_due_to_server_error || retry_due_to_rate_limit
+        ActiveSupport::Notifications.instrument 'request.yt.runagain' do |payload|
+          payload[:request_tracking_id] = @request_tracking_id
+          payload[:request_uri] = uri
+          payload[:retry_after_refresh_token] = retry_after_refresh_token
+          payload[:retry_due_to_server_error] = retry_due_to_server_error
+          payload[:retry_due_to_rate_limit] = retry_due_to_rate_limit
+          payload[:retries_so_far] = @retries_so_far
+        end
+      end
+
+      ( retry_after_refresh_token && sleep_and_retry?(3) ) ||
+        ( retry_due_to_server_error && sleep_and_retry?(3) ) ||
+          ( retry_due_to_rate_limit && sleep_and_retry?(3) )
     end
 
     # Returns the list of server errors worth retrying the request once.
@@ -269,9 +285,9 @@ module Yt
       response_error == Errors::ServerError
     end
 
-    # @return [Boolean] whether the request exceeds the YouTube quota
-    def exceeded_quota?
-      response_error == Errors::Forbidden && response.body =~ /Exceeded/i
+    # @return [Boolean] whether the request exceeds the YouTube rate limit quota
+    def exceeded_rate_limit_quota?
+      response_error == Errors::Forbidden && response.body =~ /rateLimitExceeded/i
     end
 
     # @return [Boolean] whether the request lacks proper authorization.
