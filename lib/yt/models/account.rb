@@ -176,7 +176,6 @@ module Yt
         if options[:user_info]
           @user_info = UserInfo.new data: options[:user_info]
         end
-        @request_tracking_id = options[:request_tracking_id]
       end
 
       # @private
@@ -224,10 +223,6 @@ module Yt
       def upload_content_type
         'video/*'
       end
-
-      # The request tracking ID, to support debugging.
-      # @return [String] Some arbitrary value supplied by the client.
-      attr_reader :request_tracking_id
 
     end
   end

@@ -23,6 +23,15 @@ module Yt
       extend Associations::HasOne
       extend Associations::HasMany
       extend Associations::HasAuthentication
+
+      # @private
+      def initialize(options = {})
+        @request_tracking_id = options[:request_tracking_id]
+      end
+
+      # The request tracking ID, to support debugging.
+      # @return [String] Some arbitrary value supplied by the client.
+      attr_reader :request_tracking_id
     end
   end
 
