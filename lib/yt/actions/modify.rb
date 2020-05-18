@@ -35,9 +35,9 @@ module Yt
       end
 
       def request_tracking_id
-        if instance_variable_defined?(:@parent)
+        if instance_variable_defined?(:@parent) && @parent.present?
           @parent.request_tracking_id
-        elsif instance_variable_defined?(:@auth)
+        elsif instance_variable_defined?(:@auth) && @auth.present?
           @auth.request_tracking_id
         end
       end
