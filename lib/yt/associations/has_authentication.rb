@@ -23,6 +23,7 @@ module Yt
       delegate :access_token, :refresh_token, :expires_at, to: :authentication
 
       def initialize(options = {})
+        super options
         @access_token = options[:access_token]
         @refresh_token = options[:refresh_token]
         @device_code = options[:device_code]
